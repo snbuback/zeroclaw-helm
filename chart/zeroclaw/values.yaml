@@ -1,9 +1,10 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/theonlyhennygod/zeroclaw
+  repository: ghcr.io/zeroclaw-labs/zeroclaw
   pullPolicy: IfNotPresent
-  tag: latest
+  # Overrides the image tag. Defaults to the chart's appVersion when unset.
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
