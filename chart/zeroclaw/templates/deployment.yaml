@@ -102,6 +102,7 @@ spec:
               inject_secret "__SECRET_COMPOSIO_API_KEY__" "/secrets/channel/{{ .Values.channelSecrets.secretKeys.composioApiKey }}"
               {{- end }}
               {{- end }}
+              chmod 600 /zeroclaw-data/.zeroclaw/config.toml
               chown -R 65534:65534 /zeroclaw-data
           volumeMounts:
             - name: data
