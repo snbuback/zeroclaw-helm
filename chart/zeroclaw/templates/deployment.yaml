@@ -102,7 +102,8 @@ spec:
               inject_secret "__SECRET_COMPOSIO_API_KEY__" "/secrets/channel/{{ .Values.channelSecrets.secretKeys.composioApiKey }}"
               {{- end }}
               {{- end }}
-              chown -R 65534:65534 /zeroclaw-data/.zeroclaw
+              chmod 600 /zeroclaw-data/.zeroclaw/config.toml
+              chown -R 65534:65534 /zeroclaw-data
           volumeMounts:
             - name: data
               mountPath: /zeroclaw-data
@@ -116,7 +117,7 @@ spec:
             {{- end }}
       containers:
         - name: zeroclaw
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command:
             - zeroclaw
@@ -195,7 +196,7 @@ spec:
           image: alpine/socat:1.8.0.3
           args:
             - TCP-LISTEN:{{ .Values.service.targetPort }},fork,reuseaddr
-            - TCP:127.0.0.1:8080
+            - TCP:127.0.0.1:42617
           ports:
             - name: http
               containerPort: {{ .Values.service.targetPort }}

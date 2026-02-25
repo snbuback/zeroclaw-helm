@@ -1,9 +1,10 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/theonlyhennygod/zeroclaw
+  repository: ghcr.io/zeroclaw-labs/zeroclaw
   pullPolicy: IfNotPresent
-  tag: latest
+  # Overrides the image tag. Defaults to the chart's appVersion when unset.
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
@@ -33,8 +34,8 @@ securityContext:
 
 service:
   type: ClusterIP
-  port: 3000
-  targetPort: 3000
+  port: 42617
+  targetPort: 42617
   annotations: {}
 
 ingress:
@@ -87,7 +88,8 @@ config:
   # daemon: starts gateway + channels (Telegram, Discord, …) + heartbeat + memory
   mode: gateway
 
-  # LLM provider: openrouter, openai, anthropic, ollama, groq, mistral, xai, deepseek, together, fireworks, perplexity, cohere, bedrock, venice, custom
+  # LLM provider: openrouter, openai, anthropic, ollama, groq, mistral, xai, deepseek, together, fireworks, perplexity, cohere, bedrock, venice, llamacpp, vllm, osaurus, sglang, novita, telnyx
+  # Use "custom:https://your-api.com" for OpenAI-compatible endpoints or "anthropic-custom:https://your-api.com" for Anthropic-compatible endpoints.
   provider: openrouter
 
   # Default model (leave empty for provider default)
@@ -113,7 +115,7 @@ config:
 
   # ── Memory ──────────────────────────────────────────────────
   memory:
-    # Backend: "sqlite" | "lucid" | "markdown" | "none"
+    # Backend: "sqlite" | "postgres" | "lucid" | "markdown" | "none"
     backend: sqlite
     autoSave: true
     # Embedding provider: "none" | "openai" | "custom:URL"
@@ -224,6 +226,11 @@ config:
     backend: none
     otelEndpoint: ""
     otelServiceName: ""
+    # Runtime trace storage mode: "none" | "rolling" | "full"
+    # Traces contain model output text — keep disabled on shared hosts.
+    runtimeTraceMode: none
+    runtimeTracePath: "state/runtime-trace.jsonl"
+    runtimeTraceMaxEntries: 200
 
   # ── Agent ───────────────────────────────────────────────────
   agent:
@@ -264,10 +271,18 @@ config:
   # Sensitive values (tokens, passwords) are injected from channelSecrets.
   # Only enable channels when running in "daemon" mode.
   channels:
+    # Base timeout in seconds for channel message processing.
+    # Runtime scales this with tool-loop depth (up to 4x).
+    # Default 300s is optimized for on-device LLMs; reduce to 60 for cloud APIs.
+    messageTimeoutSecs: 300
+
     telegram:
       enabled: false
       # Telegram usernames or numeric user IDs
       allowedUsers: []
+      # Only respond to messages that @-mention the bot in group chats.
+      # Direct messages always work regardless of this setting.
+      mentionOnly: false
 
     discord:
       enabled: false
