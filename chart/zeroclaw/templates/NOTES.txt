@@ -44,7 +44,7 @@ ZeroClaw is running in {{ .Values.config.mode | upper }} mode.
 
 4. Configuration:
    - Provider:     {{ .Values.config.provider }}
-   - Model:        {{ default "claude-sonnet-4-5-20250929" .Values.config.model }}
+   - Model:        {{ default "anthropic/claude-sonnet-4-6" .Values.config.model }}
    - Memory:       {{ .Values.config.memory.backend }}
    - Autonomy:     {{ .Values.config.autonomy.level }}
    - Runtime:      {{ .Values.config.runtime.kind }}

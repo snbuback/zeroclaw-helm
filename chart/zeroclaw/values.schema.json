@@ -186,12 +186,12 @@
         },
         "port": {
           "type": "integer",
-          "default": 3000,
+          "default": 42617,
           "description": "Service port."
         },
         "targetPort": {
           "type": "integer",
-          "default": 3000,
+          "default": 42617,
           "description": "Container port the Service forwards to."
         },
         "annotations": {
@@ -421,25 +421,8 @@
         },
         "provider": {
           "type": "string",
-          "enum": [
-            "openrouter",
-            "openai",
-            "anthropic",
-            "ollama",
-            "groq",
-            "mistral",
-            "xai",
-            "deepseek",
-            "together",
-            "fireworks",
-            "perplexity",
-            "cohere",
-            "bedrock",
-            "venice",
-            "custom"
-          ],
           "default": "openrouter",
-          "description": "LLM provider to use."
+          "description": "LLM provider to use. Known providers: openrouter, openai, anthropic, ollama, groq, mistral, xai, deepseek, together, fireworks, perplexity, cohere, bedrock, venice, llamacpp, vllm, osaurus, sglang, novita, telnyx. Use 'custom:https://your-api.com' for custom OpenAI-compatible endpoints or 'anthropic-custom:https://your-api.com' for Anthropic-compatible endpoints."
         },
         "model": {
           "type": "string",
@@ -496,6 +479,7 @@
               "type": "string",
               "enum": [
                 "sqlite",
+                "postgres",
                 "lucid",
                 "markdown",
                 "none"
@@ -873,6 +857,27 @@
               "type": "string",
               "default": "",
               "description": "OpenTelemetry service name."
+            },
+            "runtimeTraceMode": {
+              "type": "string",
+              "enum": [
+                "none",
+                "rolling",
+                "full"
+              ],
+              "default": "none",
+              "description": "Runtime trace storage mode. Traces contain model output text — keep disabled on shared hosts."
+            },
+            "runtimeTracePath": {
+              "type": "string",
+              "default": "state/runtime-trace.jsonl",
+              "description": "Runtime trace JSONL path (relative to workspace unless absolute)."
+            },
+            "runtimeTraceMaxEntries": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 200,
+              "description": "Maximum retained events when runtimeTraceMode is 'rolling'."
             }
           },
           "additionalProperties": false
@@ -1021,6 +1026,12 @@
           "type": "object",
           "description": "Channel configuration (non-secret settings). Sensitive tokens are injected from channelSecrets.",
           "properties": {
+            "messageTimeoutSecs": {
+              "type": "integer",
+              "minimum": 30,
+              "default": 300,
+              "description": "Base timeout in seconds for channel message processing. Runtime scales with tool-loop depth (up to 4x). Default 300s for on-device LLMs; use 60 for cloud APIs."
+            },
             "telegram": {
               "type": "object",
               "properties": {
@@ -1036,6 +1047,11 @@
                   },
                   "default": [],
                   "description": "Allowed Telegram usernames or numeric user IDs."
+                },
+                "mentionOnly": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Only respond to messages that @-mention the bot in group chats. Direct messages always work."
                 }
               },
               "additionalProperties": false

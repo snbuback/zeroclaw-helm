@@ -195,7 +195,7 @@ spec:
           image: alpine/socat:1.8.0.3
           args:
             - TCP-LISTEN:{{ .Values.service.targetPort }},fork,reuseaddr
-            - TCP:127.0.0.1:8080
+            - TCP:127.0.0.1:42617
           ports:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
