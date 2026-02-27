@@ -47,7 +47,7 @@ helm uninstall zeroclaw
 
 - **Runtime mode**: set `config.mode` to choose the runtime:
   - `gateway` (default) — HTTP webhook server only. You call `POST /webhook` to interact.
-  - `daemon` — full autonomous runtime: gateway + channels (Telegram, Discord, …) + heartbeat + memory. The upstream daemon binds to `127.0.0.1:8080` internally (ignoring host/port config), so the chart automatically adds an `alpine/socat` sidecar that forwards `0.0.0.0:<service.targetPort>` → `127.0.0.1:8080`.
+  - `daemon` — full autonomous runtime: gateway + channels (Telegram, Discord, …) + heartbeat + memory.
 - **Pairing**: set `config.requirePairing: true` to enable the 6-digit pairing flow for bearer tokens. Defaults to `false` for Kubernetes (network-level auth via ClusterIP/ingress is usually sufficient).
 - **Persistence**: data is mounted at `/zeroclaw-data` (config and workspace live there).
 - **API key**: always injected into `API_KEY` from a Kubernetes Secret (generated or existing).
