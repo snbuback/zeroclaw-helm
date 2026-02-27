@@ -105,7 +105,7 @@ config:
 
   # Require 6-digit pairing code exchange for bearer token (gateway security).
   # Disable when running behind a ClusterIP / ingress where network-level auth suffices.
-  requirePairing: false
+  requirePairing: true
 
   # Rate limits
   gateway:
