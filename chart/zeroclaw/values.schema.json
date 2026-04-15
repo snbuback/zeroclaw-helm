@@ -1642,5 +1642,5 @@
       "description": "Arbitrary extra Kubernetes manifests to deploy alongside the chart."
     }
   },
-  "additionalProperties": false
+  "additionalProperties": true
 }
