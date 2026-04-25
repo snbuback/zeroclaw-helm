@@ -106,6 +106,18 @@ true
 {{- end -}}
 
 {{/*
+Resolve ConfigMap name for ZeroClaw configuration.
+Returns existingConfigMap if set, otherwise generates the default name.
+*/}}
+{{- define "zeroclaw.configMapName" -}}
+{{- if .Values.config.existingConfigMap -}}
+{{- .Values.config.existingConfigMap -}}
+{{- else -}}
+{{- printf "%s-config" (include "zeroclaw.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Helper to render a TOML string list from a Helm list value.
 Usage: {{ include "zeroclaw.tomlStringList" .Values.config.autonomy.allowedCommands }}
 Output: ["git", "npm", "cargo"]

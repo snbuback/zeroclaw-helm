@@ -410,6 +410,16 @@
       "type": "object",
       "description": "ZeroClaw application configuration. Maps to ~/.zeroclaw/config.toml inside the container.",
       "properties": {
+        "create": {
+          "type": "boolean",
+          "default": true,
+          "description": "Create a ConfigMap containing config.toml from the values below. Disable when supplying your own ConfigMap."
+        },
+        "existingConfigMap": {
+          "type": "string",
+          "default": "",
+          "description": "Reference an existing ConfigMap instead of creating one. When set, the chart will not generate the ConfigMap but will still mount it and run the init container that copies/injects secrets."
+        },
         "mode": {
           "type": "string",
           "enum": [

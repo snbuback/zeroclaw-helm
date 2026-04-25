@@ -83,6 +83,15 @@ affinity: {}
 # Reference: https://github.com/zeroclaw-labs/zeroclaw
 # ---------------------------------------------------------------------------
 config:
+  # Create a ConfigMap containing config.toml from the values below.
+  # Disable when supplying your own ConfigMap.
+  create: true
+
+  # Reference an existing ConfigMap instead of creating one.
+  # When set, the chart will not generate the ConfigMap but will still
+  # mount it and run the init container that copies/injects secrets.
+  existingConfigMap: ""
+
   # Runtime mode: "gateway" (HTTP webhook server only) or "daemon" (full autonomous runtime)
   # gateway: bare webhook API — you call /webhook with a bearer token
   # daemon: starts gateway + channels (Telegram, Discord, …) + heartbeat + memory
