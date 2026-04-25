@@ -16,7 +16,7 @@ data:
     [providers]
     fallback = {{ .Values.config.provider | quote }}
 
-    [providers.models.{{ .Values.config.provider }}]
+    [providers.models.{{ .Values.config.provider | quote }}]
     api_key = "__SECRET_PROVIDER_API_KEY__"
     {{- if .Values.config.model }}
     model = {{ .Values.config.model | quote }}
